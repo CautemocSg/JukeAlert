@@ -1,10 +1,17 @@
 package com.untamedears.JukeAlert.listener;
 
 import static com.untamedears.JukeAlert.util.Utility.immuneToSnitch;
+import static com.untamedears.JukeAlert.util.Utility.notifyGroup;
 
+import java.sql.SQLException;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -35,6 +42,18 @@ public class ItemExchangeListener implements Listener {
 			if (!immuneToSnitch(snitch, accountId)) {
 				snitch.imposeSnitchTax();
 				if (snitch.shouldLog()) {
+					try {
+						TextComponent message = new TextComponent(ChatColor.LIGHT_PURPLE + " * "
+								+ player.getDisplayName() + " at " + snitch.getName() + " used ItemExchange at "
+								+ location.getX() + " " + location.getY() + " " + location.getZ());
+						String hoverText = snitch.getHoverText(null, null);
+						message.setHoverEvent(
+								new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverText).create()));
+						notifyGroup(snitch, message);
+					} catch (SQLException | NullPointerException e) {
+						JukeAlert.getInstance().getLogger().log(
+								Level.SEVERE, "exchangeEvent generated an exception", e);
+					}
 					plugin.getJaLogger().logSnitchExchangeEvent(snitch, player, location);
 				}
 			}
