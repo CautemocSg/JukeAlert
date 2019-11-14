@@ -44,8 +44,10 @@ public class ItemExchangeListener implements Listener {
 				if (snitch.shouldLog()) {
 					try {
 						TextComponent message = new TextComponent(ChatColor.LIGHT_PURPLE + " * "
-								+ player.getDisplayName() + " at " + snitch.getName() + " used ItemExchange at "
-								+ location.getX() + " " + location.getY() + " " + location.getZ());
+								+ player.getDisplayName() + " at " + snitch.getName() + " exchanged "
+								+ event.getInput()[1] + " " + event.getInput()[0] + " for "
+								+ event.getOutput()[1] + " " + event.getOutput()[0] + " at "
+								+ "[" + location.getX() + " " + location.getY() + " " + location.getZ() + "]");
 						String hoverText = snitch.getHoverText(null, null);
 						message.setHoverEvent(
 								new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverText).create()));
